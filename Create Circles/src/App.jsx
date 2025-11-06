@@ -2,13 +2,24 @@ import React, { useState } from "react";
 import Buttons from "./Buttons";
 import "./App.css";
 import Body from "./Body";
+import { use } from "react";
 
 export default function App() {
   const [position, setPosition] = useState([]);
 
   const [tempCircle, setTempCircle] = useState([]);
 
+  const [enable, setEnable] = useState({
+    reset: true,
+    redo: true,
+    undo: true,
+  });
+
   function undoHandler() {
+    if (position.length >= 0) {
+      setEnable({ reset: false, redo: false, undo: false });
+    }
+
     let copyPosition = position;
 
     let deletedElement = copyPosition.pop();
@@ -21,9 +32,13 @@ export default function App() {
     let regenerativeCircle = copyPosition.pop();
 
     setPosition([...position, regenerativeCircle]);
+    if (copyPosition.length == 0) {
+      setEnable({ reset: false, redo: true, undo: false });
+    }
   }
   function resetHandler() {
     console.log("magic");
+
     setPosition([]);
   }
 
@@ -36,6 +51,9 @@ export default function App() {
     return randomcode;
   }
   function clickhandler(e) {
+    if (position.length >= 0) {
+      setEnable({ reset: false, redo: true, undo: false });
+    }
     setPosition([
       ...position,
       {
@@ -53,6 +71,7 @@ export default function App() {
         undoHandler={undoHandler}
         redoHandler={redoHandler}
         resetHandler={resetHandler}
+        enable={enable}
       />
       <Body clickhandler={clickhandler} />
 
