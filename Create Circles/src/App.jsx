@@ -37,6 +37,7 @@ export default function App() {
     }
   }
   function resetHandler() {
+    setEnable({ reset: true, redo: true, undo: true });
     console.log("magic");
 
     setPosition([]);
